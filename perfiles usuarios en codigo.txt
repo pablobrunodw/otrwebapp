@@ -1,0 +1,10 @@
+       En estos archivos se tocan los permisos.
+       En todos los casos se harcodean
+       ---------------------------------------------------------
+
+       App/Vista/PanelControl/index.php
+       App/Vista/Servicio/UploadFile/uploadfile.php
+       App/Vista/Servicio/index.php
+       App/Vista/header.php
+       App/Vista/index.php
+       App/Vista/siderbar.php

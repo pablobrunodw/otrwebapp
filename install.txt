@@ -1,0 +1,12 @@
+Descargar las librerias de sqlsrv para php
+Agregar la extension a php.ini
+
+Agregar 
+extension=php_sqlsrv_56_ts.dll
+extension=php_zip.dll
+
+Instalar ODBC 11
+Cliente de SQL SERVER 
+
+
+Esta todo en la documentacion de php

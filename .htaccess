@@ -1,0 +1,25 @@
+<Files ~ "^\.(htaccess|htpasswd)$">
+deny from all
+</Files>
+ErrorDocument 400 errorpermisos.php
+ErrorDocument 401 errorpermisos.php
+ErrorDocument 402 errorpermisos.php
+ErrorDocument 403 errorpermisos.php
+ErrorDocument 404 errorpermisos.php
+ErrorDocument 405 errorpermisos.php
+ErrorDocument 406 errorpermisos.php
+ErrorDocument 407 errorpermisos.php
+ErrorDocument 408 errorpermisos.php
+ErrorDocument 409 errorpermisos.php
+ErrorDocument 410 errorpermisos.php
+ErrorDocument 411 errorpermisos.php
+ErrorDocument 412 errorpermisos.php
+ErrorDocument 413 errorpermisos.php
+ErrorDocument 414 errorpermisos.php
+ErrorDocument 500 errorpermisos.php
+ErrorDocument 501 errorpermisos.php
+ErrorDocument 502 errorpermisos.php
+ErrorDocument 503 errorpermisos.php
+ErrorDocument 504 errorpermisos.php
+ErrorDocument 505 errorpermisos.php
+order deny,allow

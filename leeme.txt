@@ -1,0 +1,87 @@
+#############################################################################
+##							ARQUITECTURA FRAMEWORK                         ##
+#############################################################################
+
+app.alpha
+	App
+		Datos
+			BaseDatos
+			Entidades
+		Negocio
+			[modulos sistemas]
+		Vista
+			[plantilla]
+	Config
+		config.ini.php
+
+
+
+app.alpha --> La carpeta raiz debe matener el nombre para no tener problemas con las rutas de accesos
+
+App --> Config (contienen ek archivo de configuración de variables el cual es utilizado por todo el sistema)
+
+App --> index.php (es un archivo inicial que interpreta el inicio de la aplicación, dentro de este archivo se ejecuta toda la aplicación, funciona como un ruteador)
+
+App --> Vista --> (contiene los archivos de la plantilla utilizada, css, js, img)
+
+App --> Negocio  (cada carpeta contenida es un modulo del sistema con su respectiva logica, la cual recibe peticiones de la VISTA, consulta a DATOS, procesa y devuelve un resultado a VISTA)
+
+App --> Datos --> BaseDatos  (manejo de cada conexiones a la base de datos)
+App --> Datos --> Entidades (se crean cada una de las clases relacionadas a una tabla de la base de datos)
+
+
+Consideraciones a tener en cuenta.
+
+1) Al llamar a una pagina del sistema, debe pasar por el parametro "view" que lo interpreta el archivo "app.alpha.App.index.php"
+
+2) Dentro de cada seccion dentro de la capa "Vista", debe crearse un archivo "action_[nombre].php" el cual tiene la funcion de recibir los parametros, instanciar la clase de negocio, esperar los resultados y enviarselo a la plantilla (funciona como un mvc). La idea principal es procesar los datos sin tener que modifiar la vista.
+
+3) Todos los archivos contenido en las carpetas "Negocio", "Datos" y los "action_", deberán tener en la primera linea el include_once del archivo config.ini.php
+
+4) Toda la logica debe se contenida en las clases dentro de la carpeta "Negocio". 
+   La carpeta "Datos" solo realiza consulta de acción y seleccion.
+   Los "action_" reciben los datos necesarios y lo modela para utilizarlos en la vista
+
+5) Las clases dentro de entidades deben tener la siguiente estructura
+   
+   **Declaraciones  ---------------> todas las propiedades de la clase mapeadas a la base de datos
+   **Getters and Setters ----------> acceso de lectura y escritura a las propiedades
+   **Constructor ------------------> todas las clases debe tener un constructor que inicialice las propiedades de la clase
+   **Metodos Genericos ------------> los metodos que todas las clases de mapeo van a tener (insert, select, deleted, entre otras)
+   **Metodos Personalizados -------> los metodos necesarios para que la logica de negocio pueda interactura facil y rapido
+
+	--Metodos Genericos de una clase de mapeo
+
+		PUBLICOS
+		+ insert (guarda un nuevo registro en la tabla con los datos cargados en las propiedades de la clase, el unico datos que no guarda es el "id" que se genera automaticamente)
+		+ select (selecciona registros de la tabla, si el "id" esta cargado, devuelve un objeto de su tipo seteado todas sus propiedades con los datos recuperados de la tabla.  
+				  Si el "id" es igual a cero o no se setea, devuelve un array cargado con todos los registros de la tabla)
+
+		PRIVADOS
+		+ setPropiedadesBySelect (metodo que recibe un objeto array con un registro y setea las propiedades de la clase)
+		+ cleanClass 			 (limpia las propiedades de la clase)
+		+ createTable 			 (este meteodo tiene como funcion retornar un string con el script para crear la tabla en la base de datos)
+
+
+#############################################################################
+##				       CONFIGURACION DEL SERVER APACHE                     ##
+#############################################################################
+
+upload_max_filesize = 32M  (como minimo)
+
+#############################################################################
+##   				       PRECAUCION EN DESARROLLO                        ##
+#############################################################################
+
+Hay dos archivos muy importantes. 
+
+ + sftp-config.json (configuracion para subir cambios al servidor de produccion por ftp desde sublime text)
+
+ 	En el archivo sftp-config.json cada vez que se desee subir un cambio al server, pregunta la contraseña del ftp. (si subimos un cambio por error tenemos la validacion por contraseña)
+
+ + config.ini.php (configuracion inicial de toda la aplicacion)
+
+ 	Al trabajar con varios programadores en el proyecto, cada uno tiene una configuracion local distinta al otro, para no tener problema al momento de la configuracion del los valores iniciales cada vez que hacemos un pull del repositorio, agregamos una logica especial al software. 
+ 	Si el "config.ini.php" esta seteado en modo "desarrollo", se busca el archivo "config_developer" dentro de la carpeta "App/config". 
+ 	Este archivo "config_developer" es unico para cada programador y es ignorado en los cambios del repositorio (no se sube). 
+ 	Dentro de este archivo debemos incluir todas las variables de seteo inicial.
